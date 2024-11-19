@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>Agregar Producto</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 50px;">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <span class="navbar-text">
+                        <a class="nav-link text-white" href="/agregar-producto">+ Vendidos</a>
+                    </span>
+                    <span class="navbar-text">
+                        <a class="nav-link text-white" href="/agregar-producto">Historial</a>
+                    </span>
+                    <span class="navbar-text">
+                        <a class="nav-link text-white" href="/agregar-producto">Stock bajo</a>
+                    </span>
+                    <span class="navbar-text">
+                        <a class="nav-link text-white" href="/listar-productos">Volver</a>
+                    </span>
+                    <span class="navbar-text">
+                        <a class="nav-link text-white" href="/">CERRAR SESION</a>
+                    </span>
+                </ul>
+              </div>
+            
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card caja">
+                    <div class="card-body">
+                        <h1>Agregar Producto</h1>
+                        <form method="POST">
+                            <div class="form-group">
+                                <label for="nombre"><i class="fas fa-box-open"></i> Nombre del Producto</label>
+                                <input type="text" name="nombre" id="nombre" required placeholder="Ingrese el nombre del producto">
+                            </div>
+                            <div class="form-group">
+                                <label for="precio"><i class="fas fa-dollar-sign"></i> Precio</label>
+                                <input type="text" name="precio" id="precio" required placeholder="Ingrese el precio del producto">
+                            </div>
+                            <div class="form-group">
+                                <label for="cantidad"><i class="fas fa-cogs"></i> Cantidad</label>
+                                <input type="number" name="cantidad" id="cantidad" required placeholder="Ingrese la cantidad del producto">
+                            </div>
+                            <button type="submit"><i class="fas fa-plus-circle"></i> Agregar Producto</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

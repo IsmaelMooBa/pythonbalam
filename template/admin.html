@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Security Ghost" style="height: 50px;">
+    
+          </a>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <span class="navbar-text">
+                    <a class="nav-link text-white" href="/agregar-producto">+ Vendidos</a>
+                  </span>
+                  <span class="navbar-text">
+                      <a class="nav-link text-white" href="/agregar-producto">Agregar Nuevo Producto</a>
+                  </span>
+                  <span class="navbar-text">
+                    <a class="nav-link text-white" href="/agregar-producto">Historial</a>
+                </span>
+                <span class="navbar-text">
+                    <a class="nav-link text-white" href="/agregar-producto">Stock bajo</a>
+                </span>
+                <span class="navbar-text">
+                    <a class="nav-link text-white" href="/">CERRAR SESION</a>
+                </span>
+            </ul>
+           
+          </div>
+        </div>
+      </nav>
+    </nav>
+    <h2>Bienvenido Administrador</h2>
+    <br>
+    <h3>Productos Existentes</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto['id'] }}</td>
+            <td>{{ producto['nombre'] }}</td>
+            <td>{{ producto['precio'] }}</td>
+            <td>{{ producto['cantidad'] }}</td>
+            <td>
+                <a href="{{ url_for('editar_producto', id=producto['id']) }}">Editar</a>
+                <a href="{{ url_for('eliminar_producto', id=producto['id']) }}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+    
+</body>
+</html>
