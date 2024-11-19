@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  
+
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Document</title>
@@ -19,12 +23,12 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <span class="navbar-text">
+                   <!-- <span class="navbar-text">
                         <a class="nav-link text-white" href="/">Agregar reseña</a>
                       </span>
                       <span class="navbar-text">
                           <a class="nav-link text-white" href="/">Comprar</a>
-                      </span>
+                      </span>-->
                     <span class="navbar-text">
                         <a class="nav-link text-white" href="/">CERRAR SESION</a>
                     </span>
@@ -36,7 +40,16 @@
       </nav>
     </nav>
     <h1>Reseñas</h1>
-    
-
+    <div class="card-container">
+      <div class="card">
+        <img class="card-img-top" src="/static/images/fantasma.jpeg" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">CAMARA 1</h5>
+          <p class="card-text">Scamara que contiene la verga</p>
+          <a href="/template/comprar.html" class="btn btn-primary">COMPRAR</a>
+        </div>
+      </div>
+    </div>    
+  </div>
 </body>
 </html>

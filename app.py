@@ -107,6 +107,9 @@ def login():
 def registro():
     return render_template('registro.html')
 
+@app.route('/comprar')
+def comprar():
+    return render_template('comprar.html')  # Asegúrate de que "comprar.html" esté en la carpeta "templates".
 
 @app.route('/crear-registro', methods=["GET", "POST"])
 def crear_registro(): 

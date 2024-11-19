@@ -263,3 +263,22 @@ input[type="number"]:focus {
     color: #333;
     font-family: 'Poppins', sans-serif;
 }
+.card-container {
+    display: flex; /* Coloca las tarjetas en una fila */
+    gap: 1rem; /* Espacio entre las tarjetas */
+    justify-content: center; /* Centra horizontalmente las tarjetas */
+    flex-wrap: wrap; /* Permite que las tarjetas salten a la siguiente fila si no caben */
+  }
+  
+  .card {
+    width: 18rem; /* Ancho de cada tarjeta */
+    border: 1px solid #ddd; /* Bordes opcionales */
+    border-radius: 0.25rem; /* Bordes redondeados opcionales */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+  }
+  
+  .card img {
+    border-top-left-radius: 0.25rem; /* Opcional: redondear imagen */
+    border-top-right-radius: 0.25rem; /* Opcional: redondear imagen */
+  }
+      
