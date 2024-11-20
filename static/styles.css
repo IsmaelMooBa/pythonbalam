@@ -115,7 +115,7 @@ body {
     max-width: 600px;
     margin: 5% auto;
     padding: 30px;
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     background-color: #fff;
 }
@@ -186,7 +186,7 @@ table td a:hover {
 }
 
 .navbar-text {
-    margin-right: 20px;
+    margin-right: 20px; 
 }
 
 .nav-link {

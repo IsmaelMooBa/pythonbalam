@@ -54,7 +54,7 @@ def agregar_producto():
     return render_template("agregar_producto.html")
 
 
-# Editar producto
+
 @app.route('/editar-producto/<int:id>', methods=["GET", "POST"])
 def editar_producto(id):
     cur = mysql.connection.cursor()
@@ -68,12 +68,10 @@ def editar_producto(id):
         
         imagen = request.files['imagen']
         if imagen and allowed_file(imagen.filename):
-            # Si hay una nueva imagen, la subimos y reemplazamos la anterior
             filename = secure_filename(imagen.filename)
             imagen_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             imagen.save(imagen_path)
         else:
-            # Si no se sube una nueva imagen, mantenemos la actual
             filename = producto['imagen']
         
         cur.execute("UPDATE productos SET nombre = %s, precio = %s, cantidad = %s, imagen = %s WHERE id = %s", 
@@ -86,7 +84,6 @@ def editar_producto(id):
     return render_template("editar_producto.html", producto=producto)
 
 
-# Eliminar producto
 @app.route('/eliminar-producto/<int:id>', methods=["GET", "POST"])
 def eliminar_producto(id):
     cur = mysql.connection.cursor()
@@ -108,7 +105,7 @@ def admin():
 @app.route('/usuario')
 def usuario():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM productos")  # Consultar todos los productos
+    cur.execute("SELECT * FROM productos")  
     productos = cur.fetchall()
     cur.close()
     return render_template("usuario.html", productos=productos)
@@ -129,15 +126,16 @@ def login():
             session['id'] = account['id']
             session['id_rol'] = account['id_rol']
 
-            if session['id_rol'] == 1:  # Administrador
-                # Consulta los productos para mostrarlos en la tabla
+            if session['id_rol'] == 1: 
+
                 cur.execute("SELECT * FROM productos")
                 productos = cur.fetchall()
                 cur.close()
                 return render_template("admin.html", productos=productos)
 
-            elif session['id_rol'] == 2:  # Usuario estándar
-                cur.execute("SELECT * FROM productos")  # Obtener los productos
+            elif session['id_rol'] == 2: 
+                
+                cur.execute("SELECT * FROM productos") 
                 productos = cur.fetchall()
                 cur.close()
                 return render_template("usuario.html", productos=productos)
@@ -151,7 +149,7 @@ def registro():
     return render_template('registro.html')
 
 @app.route('/comprar')
-def comprar():
+def comprar(id):
     return render_template('comprar.html')
 
 
