@@ -33,23 +33,41 @@
                         <a class="nav-link text-white" href="/">CERRAR SESION</a>
                     </span>
                 </ul>
-               
               </div>
           </div>
         </div>
       </nav>
     </nav>
-    <h1>Reseñas</h1>
-    <div class="card-container">
-      <div class="card">
-        <img class="card-img-top" src="/static/images/fantasma.jpeg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">CAMARA 1</h5>
-          <p class="card-text">Scamara que contiene la verga</p>
-          <a href="/template/comprar.html" class="btn btn-primary">COMPRAR</a>
-        </div>
-      </div>
-    </div>    
-  </div>
+    <h1>Lista de Productos</h1>
+    <div class="container my-4">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Imagen</th>
+                    <th>Precio</th>
+                    <th>Comprar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto['id'] }}</td>
+                    <td>{{ producto['nombre'] }}</td>
+                    <td>
+                      <img src="{{ url_for('static', filename='images/' + producto['imagen']) }}" 
+                           alt="{{ producto['nombre'] }}" style="width: 100px; height: auto;">
+                    </td>
+                    <td>{{ producto['precio'] }}</td>
+                    <td>
+                      <a href="/comprar/{{ producto['id'] }}" class="btn btn-primary">Comprar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
 </body>
 </html>

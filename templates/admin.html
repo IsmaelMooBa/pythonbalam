@@ -39,35 +39,34 @@
     <h2>Bienvenido Administrador</h2>
     <br>
     <h3>Productos Existentes</h3>
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for producto in productos %}
-        <tr>
-            <td>{{ producto['id'] }}</td>
-            <td>{{ producto['nombre'] }}</td>
-            <td>{{ producto['precio'] }}</td>
-            <td>{{ producto['cantidad'] }}</td>
-            <td>
-                <a href="{{ url_for('editar_producto', id=producto['id']) }}">Editar</a>
-                <a href="{{ url_for('eliminar_producto', id=producto['id']) }}">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-
-
-
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+                <th>Imagenes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto['id'] }}</td>
+                <td>{{ producto['nombre'] }}</td>
+                <td>{{ producto['precio'] }}</td>
+                <td>
+                    <a href="/editar-producto/{{ producto['id'] }}" class="btn btn-warning">Editar</a>
+                    <a href="/eliminar-producto/{{ producto['id'] }}" class="btn btn-danger">Eliminar</a>
+                </td>
+                <td>
+                    <img src="{{ url_for('static', filename='images/' + producto['imagen']) }}" alt="Imagen del producto" style="width: 100px; height: auto;">
+                </td>                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     
+
 </body>
 </html>
