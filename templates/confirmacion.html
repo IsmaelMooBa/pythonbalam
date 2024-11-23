@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Confirmación de Compra</title>
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Security Ghost" style="height: 50px;">
+      </a>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <span class="navbar-text">
+                <a class="nav-link text-white" href="/">CERRAR SESIÓN</a>
+            </span>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-4">
+    <!-- Mostrar mensaje de éxito con 5 segundos de duración -->
+    {% if mensaje_exito %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert" id="mensajeExito">
+        <strong>¡Compra exitosa!</strong> Gracias por tu compra. Recibirás un correo con los detalles.
+      </div>
+      <script>
+        setTimeout(function() {
+            document.getElementById('mensajeExito').style.display = 'none';
+            document.getElementById('reseñaForm').style.display = 'block'; // Muestra el formulario después de que desaparezca el mensaje
+        }, 5000); // El mensaje desaparece después de 5 segundos
+      </script>
+    {% endif %}
+
+    <!-- Formulario de reseña -->
+    <div id="reseñaForm" style="display: none;">
+      <h2 class="text-center">¡Comparte tu reseña con nosotros!</h2>
+      <form method="POST" class="mx-auto" style="max-width: 500px;">
+        <!-- Campo de opinión -->
+        <div class="mb-3">
+          <label for="opinion" class="form-label">Tu Opinión</label>
+          <textarea class="form-control" id="opinion" name="opinion" rows="3" required></textarea>
+        </div>
+
+        <!-- Selección de estrellas -->
+        <div class="mb-3">
+          <label class="form-label">Calificación</label>
+          <div class="stars">
+            <span class="fa fa-star-o" data-value="1"></span>
+            <span class="fa fa-star-o" data-value="2"></span>
+            <span class="fa fa-star-o" data-value="3"></span>
+            <span class="fa fa-star-o" data-value="4"></span>
+            <span class="fa fa-star-o" data-value="5"></span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-dark w-100">Enviar Reseña</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script>
+    // Manejar el clic en las estrellas para seleccionar la calificación
+    const stars = document.querySelectorAll('.stars span');
+    stars.forEach(star => {
+      star.addEventListener('click', function() {
+        stars.forEach(s => s.classList.remove('fa-star'));
+        stars.forEach(s => s.classList.add('fa-star-o'));
+        const value = this.getAttribute('data-value');
+        for (let i = 0; i < value; i++) {
+          stars[i].classList.remove('fa-star-o');
+          stars[i].classList.add('fa-star');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

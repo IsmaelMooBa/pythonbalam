@@ -61,7 +61,8 @@
                     </td>
                     <td>{{ producto['precio'] }}</td>
                     <td>
-                      <a href="/comprar/{{ producto['id'] }}" class="btn btn-primary">Comprar</a>
+                      <a href="{{ url_for('producto_detalle', id=producto['id']) }}" class="btn btn-primary">Comprar</a>
+
                     </td>                    
                 </tr>
                 {% endfor %}

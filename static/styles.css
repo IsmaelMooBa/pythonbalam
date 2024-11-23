@@ -281,4 +281,87 @@ input[type="number"]:focus {
     border-top-left-radius: 0.25rem; /* Opcional: redondear imagen */
     border-top-right-radius: 0.25rem; /* Opcional: redondear imagen */
   }
-      
+  /* Estilos generales para el modal */
+.modal {
+    display: block; 
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#estrellas {
+    display: flex;
+    justify-content: space-between;
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.estrella {
+    font-size: 30px;
+    cursor: pointer;
+    color: #d3d3d3; /* Color gris claro por defecto */
+    transition: color 0.3s ease;
+}
+
+.estrella.checked {
+    color: gold; /* Color dorado para las estrellas seleccionadas */
+}
+
+
+/* Centrar el formulario dentro del contenedor */
+#reseñaFormulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centrar horizontalmente */
+    justify-content: center;  /* Centrar verticalmente */
+    width: 100%;
+    max-width: 600px;  /* Definir un ancho máximo */
+    margin: 0 auto;  /* Centrado horizontal en el contenedor */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Centrar los elementos internos */
+#reseñaFormulario label,
+#reseñaFormulario textarea,
+#reseñaFormulario #estrellas,
+#reseñaFormulario button {
+    margin-bottom: 15px;  /* Espaciado entre los elementos */
+}
+
+/* Estilos para el botón */
+button {
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+
+

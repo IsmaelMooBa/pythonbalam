@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Detalles del Producto</title>
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Security Ghost" style="height: 50px;">
+      </a>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <span class="navbar-text">
+                <a class="nav-link text-white" href="/">CERRAR SESIÓN</a>
+            </span>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="container my-4">
+    <h1 class="text-center">{{ producto['nombre'] }}</h1>
+    <div class="text-center mb-4">
+        <img src="{{ url_for('static', filename='images/' + producto['imagen']) }}" alt="{{ producto['nombre'] }}" class="img-fluid" style="max-width: 300px;">
+    </div>
+    <p class="text-center"><strong>Precio:</strong> ${{ producto['precio'] }}</p>
+
+    <form method="POST" class="mx-auto" style="max-width: 400px;">
+        <!-- Selector de cantidad con botones +/- -->
+        <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <div class="input-group">
+                <button class="btn btn-outline-secondary btn-qty" type="button" onclick="adjustQuantity(-1)">-</button>
+                <input type="number" class="form-control text-center" id="cantidad" name="cantidad" min="1" max="{{ producto['cantidad'] }}" value="1" required>
+                <button class="btn btn-outline-secondary btn-qty" type="button" onclick="adjustQuantity(1)">+</button>
+            </div>
+        </div>
+
+        <!-- Selector de método de pago -->
+        <div class="mb-3">
+            <label for="metodo_pago" class="form-label">Método de Pago</label>
+            <select class="form-select" id="metodo_pago" name="metodo_pago" required>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-custom w-100 btn btn-dark">Comprar Ahora</button>
+    </form>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Función para ajustar la cantidad con los botones +/- 
+    function adjustQuantity(value) {
+        const cantidadInput = document.getElementById('cantidad');
+        const currentValue = parseInt(cantidadInput.value) || 1;
+        const newValue = currentValue + value;
+        if (newValue >= parseInt(cantidadInput.min) && newValue <= parseInt(cantidadInput.max)) {
+            cantidadInput.value = newValue;
+        }
+    }
+  </script>
+</body>
+</html>

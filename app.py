@@ -2,7 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, Response, url_for, session
 from flask_mysqldb import MySQL, MySQLdb
-
+from decimal import Decimal  # Importa Decimal para manejar las conversiones de precio
 
 app = Flask(__name__, template_folder='templates')
 
@@ -54,7 +54,6 @@ def agregar_producto():
     return render_template("agregar_producto.html")
 
 
-
 @app.route('/editar-producto/<int:id>', methods=["GET", "POST"])
 def editar_producto(id):
     cur = mysql.connection.cursor()
@@ -97,7 +96,6 @@ def eliminar_producto(id):
 def home():
     return render_template('index.html')   
 
-
 @app.route('/admin')
 def admin():
     return render_template('admin.html')  
@@ -109,7 +107,7 @@ def usuario():
     productos = cur.fetchall()
     cur.close()
     return render_template("usuario.html", productos=productos)
- 
+
 
 @app.route('/acceso-login', methods=["GET", "POST"])
 def login():
@@ -143,7 +141,6 @@ def login():
             return render_template('index.html', mensaje="Usuario o Contraseña Incorrectos")
 
 
-
 @app.route('/registro')
 def registro():
     return render_template('registro.html')
@@ -173,6 +170,58 @@ def listar():
     
     return render_template("listar_usuarios.html", usuarios=usuarios)
 
+@app.route('/procesar_pago/<int:id>/<int:cantidad>', methods=["POST"])
+def procesar_pago(id, cantidad):
+    metodo_pago = request.form['metodo_pago']
+    
+    # Aquí iría la lógica de procesamiento del pago, como integrar con una API de pago o registrar la compra
+    # Por ahora solo vamos a mostrar un mensaje de éxito
+
+    # Obtener los detalles del producto
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
+    producto = cur.fetchone()
+    cur.close()
+
+    # Mostrar una página de éxito
+    return render_template('pago_confirmado.html', producto=producto, cantidad=cantidad, metodo_pago=metodo_pago)
+
+@app.route('/producto-detalle/<int:id>', methods=["GET", "POST"])
+def producto_detalle(id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
+    producto = cur.fetchone()
+    cur.close()
+
+    if request.method == 'POST':
+        cantidad = request.form['cantidad']
+        
+        # Aseguramos que la cantidad sea un número entero
+        cantidad = int(cantidad)
+        
+        # Convertimos el precio del producto a Decimal para poder multiplicar sin problemas
+        precio = Decimal(producto['precio'])
+        
+        # Calculamos el total
+        total = precio * cantidad
+
+        return render_template('compra_confirmada.html', producto=producto, cantidad=cantidad, total=total)
+
+    return render_template('producto_detalle.html', producto=producto)
+
+@app.route('/pago_confirmado', methods=["GET", "POST"])
+def pago_confirmado():
+    if request.method == "POST":
+        # Guardar reseña en la base de datos
+        opinion = request.form['opinion']
+        estrellas = request.form['estrellas']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO reseñas (producto_id, opinion, estrellas) VALUES (%s, %s, %s)", (request.form['producto_id'], opinion, estrellas))
+        mysql.connection.commit()
+        cur.close()
+
+    return render_template("pago_confirmado.html")
 
 if __name__ == '__main__':
    app.secret_key = "pinchellave"
