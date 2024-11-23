@@ -174,40 +174,67 @@ def listar():
 def procesar_pago(id, cantidad):
     metodo_pago = request.form['metodo_pago']
     
-    # Aquí iría la lógica de procesamiento del pago, como integrar con una API de pago o registrar la compra
-    # Por ahora solo vamos a mostrar un mensaje de éxito
-
-    # Obtener los detalles del producto
+    # Obtener detalles del producto
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
     producto = cur.fetchone()
+
+    # Verificar si hay suficiente cantidad
+    if cantidad > producto['cantidad']:
+        cur.close()
+        return render_template('producto_detalle.html', producto=producto, error="Cantidad no disponible.")
+
+    # Actualizar cantidad en inventario
+    nueva_cantidad = producto['cantidad'] - cantidad
+    cur.execute("UPDATE productos SET cantidad = %s WHERE id = %s", (nueva_cantidad, id))
+    mysql.connection.commit()
     cur.close()
 
-    # Mostrar una página de éxito
-    return render_template('pago_confirmado.html', producto=producto, cantidad=cantidad, metodo_pago=metodo_pago)
+    # Calcular el total
+    precio_total = Decimal(producto['precio']) * cantidad
+
+    # Renderizar la página `pago_confirmado.html` con datos dinámicos
+    return render_template('pago_confirmado.html', 
+                           producto=producto, 
+                           cantidad=cantidad, 
+                           total=precio_total, 
+                           metodo_pago=metodo_pago)
+
 
 @app.route('/producto-detalle/<int:id>', methods=["GET", "POST"])
 def producto_detalle(id):
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
     producto = cur.fetchone()
-    cur.close()
 
     if request.method == 'POST':
-        cantidad = request.form['cantidad']
+        cantidad = int(request.form['cantidad'])  # Cantidad seleccionada por el usuario
+        metodo_pago = request.form['metodo_pago']
         
-        # Aseguramos que la cantidad sea un número entero
-        cantidad = int(cantidad)
-        
-        # Convertimos el precio del producto a Decimal para poder multiplicar sin problemas
-        precio = Decimal(producto['precio'])
-        
-        # Calculamos el total
-        total = precio * cantidad
+        # Verificar si hay suficiente cantidad disponible
+        if cantidad > producto['cantidad']:
+            return render_template('producto_detalle.html', producto=producto, error="Cantidad no disponible.")
 
-        return render_template('compra_confirmada.html', producto=producto, cantidad=cantidad, total=total)
+        # Calcular el precio total
+        precio_total = Decimal(producto['precio']) * cantidad
 
+        # Actualizar la base de datos: restar la cantidad comprada
+        nueva_cantidad = producto['cantidad'] - cantidad
+        cur.execute("UPDATE productos SET cantidad = %s WHERE id = %s", (nueva_cantidad, id))
+        mysql.connection.commit()
+
+        # Opcional: Guardar registro de la compra (si tienes una tabla de compras)
+        # cur.execute("INSERT INTO compras (producto_id, cantidad, total, metodo_pago) VALUES (%s, %s, %s, %s)", (id, cantidad, precio_total, metodo_pago))
+        # mysql.connection.commit()
+
+        cur.close()
+
+        # Redirigir o mostrar confirmación de compra
+        return render_template('compra_confirmada.html', producto=producto, cantidad=cantidad, total=precio_total, metodo_pago=metodo_pago)
+
+    cur.close()
     return render_template('producto_detalle.html', producto=producto)
+
 
 @app.route('/pago_confirmado', methods=["GET", "POST"])
 def pago_confirmado():
@@ -222,6 +249,20 @@ def pago_confirmado():
         cur.close()
 
     return render_template("pago_confirmado.html")
+
+@app.route('/guardar-reseña', methods=["POST"])
+def guardar_reseña():
+    producto_id = request.form['producto_id']
+    opinion = request.form['opinion']
+    estrellas = request.form['estrellas']
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO reseñas (producto_id, opinion, estrellas) VALUES (%s, %s, %s)", (producto_id, opinion, estrellas))
+    mysql.connection.commit()
+    cur.close()
+
+    return redirect(url_for('usuario'))
+
 
 if __name__ == '__main__':
    app.secret_key = "pinchellave"

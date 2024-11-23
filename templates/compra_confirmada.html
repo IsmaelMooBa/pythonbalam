@@ -24,32 +24,40 @@
         </div>
       </nav>
 
+
 <!-- Modal de compra exitosa -->
 <div id="successModal" class="modal">
     <div class="modal-content">
         <h2>¡Compra Exitosa!</h2>
-        <p>Gracias por comprar en Security Ghost.</p>
+        <p>Gracias por comprar <strong>{{ cantidad }}</strong> unidad(es) de <strong>{{ producto['nombre'] }}</strong>.</p>
+        <p>Total pagado: ${{ total }}</p>
+        <p>Método de pago: {{ metodo_pago }}</p>
     </div>
 </div>
+
+
 
 <!-- Reseñas y formulario -->
 <div id="reviewForm" style="display:none;">
     <h3>Reseñas</h3>
-    <form id="reseñaFormulario">
-        <label for="opinion" >Tu Opinión:</label><br>
+    <form id="reseñaFormulario" action="{{ url_for('guardar_reseña') }}" method="POST">
+        <input type="hidden" name="producto_id" value="{{ producto['id'] }}">
+        <label for="opinion">Tu Opinión:</label><br>
         <textarea id="opinion" name="opinion" rows="4" cols="50" placeholder="Escribe tu reseña aquí..."></textarea><br><br>
-
+    
         <label for="calificacion">Califica el producto:</label><br>
         <div id="estrellas">
-            <div class="estrella" data-id="1">&#9733;</div>
-            <div class="estrella" data-id="2">&#9733;</div>
-            <div class="estrella" data-id="3">&#9733;</div>
-            <div class="estrella" data-id="4">&#9733;</div>
-            <div class="estrella" data-id="5">&#9733;</div>
+            {% for i in range(1, 6) %}
+            <label>
+                <input type="radio" name="estrellas" value="{{ i }}">
+                &#9733;
+            </label>
+            {% endfor %}
         </div><br><br>
-
+    
         <button type="submit" class="btn btn-dark">Enviar Reseña</button>
     </form>
+    
 </div>
 
 <script>

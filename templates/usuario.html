@@ -43,32 +43,30 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
-                    <th>Imagen</th>
+                    <th>Cantidad</th>
                     <th>Precio</th>
+                    <th>Producto</th>
                     <th>Comprar</th>
                 </tr>
             </thead>
             <tbody>
                 {% for producto in productos %}
                 <tr>
-                    <td>{{ producto['id'] }}</td>
                     <td>{{ producto['nombre'] }}</td>
+                    <td>{{producto['cantidad']}}</td>
+                    <td>{{ producto['precio'] }}</td>
                     <td>
                       <img src="{{ url_for('static', filename='images/' + producto['imagen']) }}" 
                            alt="{{ producto['nombre'] }}" style="width: 100px; height: auto;">
                     </td>
-                    <td>{{ producto['precio'] }}</td>
                     <td>
-                      <a href="{{ url_for('producto_detalle', id=producto['id']) }}" class="btn btn-primary">Comprar</a>
-
+                      <a href="{{ url_for('producto_detalle', id=producto['id']) }}" class="btn btn-dark">Comprar</a>
                     </td>                    
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    
 </body>
 </html>

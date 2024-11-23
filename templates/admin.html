@@ -39,8 +39,9 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Producto</th>
                 <th>Acciones</th>
-                <th>Imagenes</th>
             </tr>
         </thead>
         <tbody>
@@ -49,13 +50,14 @@
                 <td>{{ producto['id'] }}</td>
                 <td>{{ producto['nombre'] }}</td>
                 <td>{{ producto['precio'] }}</td>
+                <td>{{producto['cantidad']}}</td>
+                <td>
+                    <img src="{{ url_for('static', filename='images/' + producto['imagen']) }}" alt="Imagen del producto" style="width: 100px; height: auto;">
+                </td> 
                 <td>
                     <a href="/editar-producto/{{ producto['id'] }}" class="btn btn-warning">Editar</a>
                     <a href="/eliminar-producto/{{ producto['id'] }}" class="btn btn-danger">Eliminar</a>
-                </td>
-                <td>
-                    <img src="{{ url_for('static', filename='images/' + producto['imagen']) }}" alt="Imagen del producto" style="width: 100px; height: auto;">
-                </td>                
+                </td>               
             </tr>
             {% endfor %}
         </tbody>

@@ -33,40 +33,50 @@
     <p class="text-center"><strong>Precio:</strong> ${{ producto['precio'] }}</p>
 
     <form method="POST" class="mx-auto" style="max-width: 400px;">
-        <!-- Selector de cantidad con botones +/- -->
-        <div class="mb-3">
-            <label for="cantidad" class="form-label">Cantidad</label>
-            <div class="input-group">
-                <button class="btn btn-outline-secondary btn-qty" type="button" onclick="adjustQuantity(-1)">-</button>
-                <input type="number" class="form-control text-center" id="cantidad" name="cantidad" min="1" max="{{ producto['cantidad'] }}" value="1" required>
-                <button class="btn btn-outline-secondary btn-qty" type="button" onclick="adjustQuantity(1)">+</button>
-            </div>
-        </div>
-
-        <!-- Selector de método de pago -->
-        <div class="mb-3">
-            <label for="metodo_pago" class="form-label">Método de Pago</label>
-            <select class="form-select" id="metodo_pago" name="metodo_pago" required>
-                <option value="Efectivo">Efectivo</option>
-                <option value="Tarjeta de Débito">Tarjeta de Débito</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-custom w-100 btn btn-dark">Comprar Ahora</button>
-    </form>
-  </div>
-
-  <!-- Scripts -->
+      <!-- Cantidad -->
+      <div class="mb-3">
+          <label for="cantidad" class="form-label">Cantidad</label>
+          <div class="input-group">
+              <button type="button" class="btn btn-outline-secondary" onclick="adjustQuantity(-1)">-</button>
+              <input type="number" id="cantidad" name="cantidad" class="form-control text-center" min="1" max="{{ producto['cantidad'] }}" value="1" required>
+              <button type="button" class="btn btn-outline-secondary" onclick="adjustQuantity(1)">+</button>
+          </div>
+      </div>
+  
+      <!-- Método de pago -->
+      <div class="mb-3">
+          <label for="metodo_pago" class="form-label">Método de Pago</label>
+          <select id="metodo_pago" name="metodo_pago" class="form-select" required>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+          </select>
+      </div>
+  
+      <!-- Precio total -->
+      <p class="text-center"><strong>Total:</strong> $<span id="total">{{ producto['precio'] }}</span></p>
+  
+      <button type="submit" class="btn btn-dark w-100">Comprar Ahora</button>
+  </form>
+  
   <script>
-    // Función para ajustar la cantidad con los botones +/- 
-    function adjustQuantity(value) {
-        const cantidadInput = document.getElementById('cantidad');
-        const currentValue = parseInt(cantidadInput.value) || 1;
-        const newValue = currentValue + value;
-        if (newValue >= parseInt(cantidadInput.min) && newValue <= parseInt(cantidadInput.max)) {
-            cantidadInput.value = newValue;
-        }
-    }
+      const precioUnitario = {{ producto['precio'] }};
+      const cantidadInput = document.getElementById('cantidad');
+      const totalDisplay = document.getElementById('total');
+  
+      function adjustQuantity(delta) {
+          let cantidad = parseInt(cantidadInput.value) || 1;
+          cantidad = Math.min(Math.max(cantidad + delta, 1), {{ producto['cantidad'] }});
+          cantidadInput.value = cantidad;
+          updateTotal();
+      }
+  
+      cantidadInput.addEventListener('input', updateTotal);
+  
+      function updateTotal() {
+          const cantidad = parseInt(cantidadInput.value) || 1;
+          totalDisplay.textContent = (precioUnitario * cantidad).toFixed(2);
+      }
   </script>
+  
 </body>
 </html>
