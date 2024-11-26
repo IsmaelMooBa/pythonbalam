@@ -204,16 +204,22 @@ def procesar_pago(id, cantidad):
 @app.route('/producto-detalle/<int:id>', methods=["GET", "POST"])
 def producto_detalle(id):
     cur = mysql.connection.cursor()
+    
+    # Obtener detalles del producto
     cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
     producto = cur.fetchone()
-
+    
+    # Obtener las reseñas del producto
+    cur.execute("SELECT opinion, estrellas, fecha, nombre FROM reseñas WHERE producto_id = %s", (id,))
+    reseñas = cur.fetchall()
+    
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])  # Cantidad seleccionada por el usuario
         metodo_pago = request.form['metodo_pago']
         
         # Verificar si hay suficiente cantidad disponible
         if cantidad > producto['cantidad']:
-            return render_template('producto_detalle.html', producto=producto, error="Cantidad no disponible.")
+            return render_template('producto_detalle.html', producto=producto, reseñas=reseñas, error="Cantidad no disponible.")
 
         # Calcular el precio total
         precio_total = Decimal(producto['precio']) * cantidad
@@ -233,7 +239,12 @@ def producto_detalle(id):
         return render_template('compra_confirmada.html', producto=producto, cantidad=cantidad, total=precio_total, metodo_pago=metodo_pago)
 
     cur.close()
-    return render_template('producto_detalle.html', producto=producto)
+    return render_template('producto_detalle.html', producto=producto, reseñas=reseñas)
+
+
+
+
+
 
 
 @app.route('/pago_confirmado', methods=["GET", "POST"])
@@ -255,13 +266,17 @@ def guardar_reseña():
     producto_id = request.form['producto_id']
     opinion = request.form['opinion']
     estrellas = request.form['estrellas']
+    nombre = request.form['nombre']  # Capturar el nombre del usuario
 
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO reseñas (producto_id, opinion, estrellas) VALUES (%s, %s, %s)", (producto_id, opinion, estrellas))
+    cur.execute("INSERT INTO reseñas (producto_id, opinion, estrellas, nombre) VALUES (%s, %s, %s, %s)", 
+                (producto_id, opinion, estrellas, nombre))
     mysql.connection.commit()
     cur.close()
 
     return redirect(url_for('usuario'))
+
+
 
 
 if __name__ == '__main__':

@@ -42,6 +42,11 @@
     <h3>Reseñas</h3>
     <form id="reseñaFormulario" action="{{ url_for('guardar_reseña') }}" method="POST">
         <input type="hidden" name="producto_id" value="{{ producto['id'] }}">
+
+        <!-- Campo para nombre -->
+        <label for="nombre">Tu Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre" required placeholder="Ingresa tu nombre"><br><br>
+
         <label for="opinion">Tu Opinión:</label><br>
         <textarea id="opinion" name="opinion" rows="4" cols="50" placeholder="Escribe tu reseña aquí..."></textarea><br><br>
     
@@ -57,8 +62,8 @@
     
         <button type="submit" class="btn btn-dark">Enviar Reseña</button>
     </form>
-    
 </div>
+
 
 <script>
     // Función para hacer desaparecer el modal después de 5 segundos

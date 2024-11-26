@@ -8,7 +8,6 @@
     <title>Detalles del Producto</title>
 </head>
 <body>
-  <!-- Barra de navegación -->
   <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
@@ -19,12 +18,13 @@
             <span class="navbar-text">
                 <a class="nav-link text-white" href="/">CERRAR SESIÓN</a>
             </span>
+            <span>
+                <a class="nav-link text-white" href="/usuario">Volver</a>
+            </span>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- Contenido principal -->
   <div class="container my-4">
     <h1 class="text-center">{{ producto['nombre'] }}</h1>
     <div class="text-center mb-4">
@@ -33,7 +33,6 @@
     <p class="text-center"><strong>Precio:</strong> ${{ producto['precio'] }}</p>
 
     <form method="POST" class="mx-auto" style="max-width: 400px;">
-      <!-- Cantidad -->
       <div class="mb-3">
           <label for="cantidad" class="form-label">Cantidad</label>
           <div class="input-group">
@@ -42,8 +41,6 @@
               <button type="button" class="btn btn-outline-secondary" onclick="adjustQuantity(1)">+</button>
           </div>
       </div>
-  
-      <!-- Método de pago -->
       <div class="mb-3">
           <label for="metodo_pago" class="form-label">Método de Pago</label>
           <select id="metodo_pago" name="metodo_pago" class="form-select" required>
@@ -51,13 +48,44 @@
               <option value="Tarjeta de Débito">Tarjeta de Débito</option>
           </select>
       </div>
-  
-      <!-- Precio total -->
       <p class="text-center"><strong>Total:</strong> $<span id="total">{{ producto['precio'] }}</span></p>
   
       <button type="submit" class="btn btn-dark w-100">Comprar Ahora</button>
   </form>
-  
+
+  <div class="container my-4">
+    <h2 class="text-center">Reseñas</h2>
+    {% if reseñas %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>  <!-- Mostrar el nombre -->
+                    <th>Opinión</th>
+                    <th>Estrellas</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reseña in reseñas %}
+                    <tr>
+                        <td>{{ reseña['nombre'] }}</td> <!-- Nombre de la persona que deja la reseña -->
+                        <td>{{ reseña['opinion'] }}</td>
+                        <td>
+                            {% for i in range(reseña['estrellas']) %}
+                                ⭐
+                            {% endfor %}
+                        </td>
+                        <td>{{ reseña['fecha'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center">No hay reseñas disponibles para este producto.</p>
+    {% endif %}
+</div>
+
+
   <script>
       const precioUnitario = {{ producto['precio'] }};
       const cantidadInput = document.getElementById('cantidad');
