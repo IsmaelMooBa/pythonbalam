@@ -43,6 +43,14 @@ def historial_ventas():
 
     return render_template("historial.html", historial_reseñas=historial_reseñas)
 
+@app.route('/agregar-administrador')
+def agregar_administrador():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM productos")
+    productos = cur.fetchall()
+    cur.close()
+    
+    return render_template("agregarAdmin.html", productos=productos)
 
 
 
