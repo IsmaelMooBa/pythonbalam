@@ -24,11 +24,27 @@ def allowed_file(filename):
 @app.route('/historial')
 def historial_ventas():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM productos")
-    productos = cur.fetchall()
+    cur.execute("SELECT * FROM reseñas")  # Obtiene todas las reseñas
+    reseñas = cur.fetchall()  # Recupera todas las filas
     cur.close()
-    
-    return render_template("historial.html", productos=productos)
+
+    # Organiza las reseñas por producto_id
+    historial_reseñas = {}
+    for reseña in reseñas:
+        producto_id = reseña['producto_id']  # Usa la clave 'producto_id' en lugar de un índice
+        if producto_id not in historial_reseñas:
+            historial_reseñas[producto_id] = []
+        historial_reseñas[producto_id].append({
+            'nombre': reseña['nombre'],  # Accede por nombre de columna
+            'opinion': reseña['opinion'],
+            'estrellas': reseña['estrellas'],
+            'fecha': reseña['fecha'],
+        })
+
+    return render_template("historial.html", historial_reseñas=historial_reseñas)
+
+
+
 
 @app.route('/listar-productos')
 def listar_productos():
@@ -252,11 +268,6 @@ def producto_detalle(id):
     return render_template('producto_detalle.html', producto=producto, reseñas=reseñas)
 
 
-
-
-
-
-
 @app.route('/pago_confirmado', methods=["GET", "POST"])
 def pago_confirmado():
     if request.method == "POST":
@@ -285,9 +296,6 @@ def guardar_reseña():
     cur.close()
 
     return redirect(url_for('usuario'))
-
-
-
 
 if __name__ == '__main__':
    app.secret_key = "pinchellave"

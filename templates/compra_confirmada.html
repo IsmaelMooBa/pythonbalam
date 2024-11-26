@@ -31,7 +31,7 @@
         <h2>¡Compra Exitosa!</h2>
         <p>Gracias por comprar <strong>{{ cantidad }}</strong> unidad(es) de <strong>{{ producto['nombre'] }}</strong>.</p>
         <p>Total pagado: ${{ total }}</p>
-        <p>Método de pago: {{ metodo_pago }}</p>
+        <p>Método de pago: {{ metodo_pago }} se recogera el producto en sucursal</p>
     </div>
 </div>
 
@@ -70,7 +70,7 @@
     setTimeout(function() {
         document.getElementById("successModal").style.display = "none";
         document.getElementById("reviewForm").style.display = "block"; // Mostrar el formulario de reseñas
-    }, 2000); // 5 segundos
+    }, 5000); // 5 segundos
 
     // Función para marcar las estrellas en amarillo
     const estrellas = document.querySelectorAll('.estrella');

@@ -6,26 +6,62 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Document</title>
+    <title>Historial de Reseñas</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Security Ghost" style="height: 50px;">
-    
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-            <span class="navbar-text">
-              <a class="nav-link text-white" href="/registro">REGISTRO</a>
-            </span>
-          </div>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar d-flex">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Security Ghost" style="height: 50px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+          <span class="navbar-text d-flex w-100 justify-content-end">
+              <a class="nav-link text-white" href="/listar-productos">VOLVER</a>
+              <a class="nav-link text-white" href="/agregar-producto">AGREGAR NUEVO PRODUCTO</a>
+            </span>      
         </div>
-      </nav>
+      </div>
     </nav>
+
+    <!-- Contenido del historial de reseñas -->
+    <div class="container mt-5">
+      <h2 class="text-center">Historial de Reseñas de Todos los Productos</h2>
+  
+      {% if historial_reseñas %}
+          {% for producto_id, reseñas in historial_reseñas.items() %}
+              <h3>Producto ID: {{ producto_id }}</h3>
+              <table class="table table-striped">
+                  <thead>
+                      <tr>
+                          <th>Nombre</th>
+                          <th>Opinión</th>
+                          <th>Estrellas</th>
+                          <th>Fecha</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for reseña in reseñas %}
+                          <tr>
+                              <td>{{ reseña['nombre'] }}</td>
+                              <td>{{ reseña['opinion'] }}</td>
+                              <td>{{ reseña['estrellas'] }}</td>
+                              <td>{{ reseña['fecha'] }}</td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          {% endfor %}
+      {% else %}
+          <p class="text-center">No hay reseñas disponibles para los productos.</p>
+      {% endif %}
+  </div>
 </body>
 </html>
+
+
+
