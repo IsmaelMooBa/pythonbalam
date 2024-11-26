@@ -20,6 +20,16 @@ mysql = MySQL(app)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+
+@app.route('/historial')
+def historial_ventas():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM productos")
+    productos = cur.fetchall()
+    cur.close()
+    
+    return render_template("historial.html", productos=productos)
+
 @app.route('/listar-productos')
 def listar_productos():
     cur = mysql.connection.cursor()

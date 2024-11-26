@@ -15,12 +15,11 @@
       </a>
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <span class="navbar-text">
-                <a class="nav-link text-white" href="/">CERRAR SESIÓN</a>
+            <span class="navbar-text d-flex w-100 custom-navbar">
+                <a class="nav-link text-white" href="/usuario">VOLVER</a>
+                <a class="nav-link text-white" href="/">CERRAR SESION</a>
             </span>
-            <span>
-                <a class="nav-link text-white" href="/usuario">Volver</a>
-            </span>
+
         </ul>
       </div>
     </div>
@@ -71,9 +70,11 @@
                         <td>{{ reseña['nombre'] }}</td> <!-- Nombre de la persona que deja la reseña -->
                         <td>{{ reseña['opinion'] }}</td>
                         <td>
-                            {% for i in range(reseña['estrellas']) %}
-                                ⭐
-                            {% endfor %}
+                            <div class="estrellas" data-estrellas="{{ reseña['estrellas'] }}">
+                                {% for i in range(5) %}
+                                    <span class="estrella">&#9733;</span> <!-- Estrella vacía -->
+                                {% endfor %}
+                            </div>
                         </td>
                         <td>{{ reseña['fecha'] }}</td>
                     </tr>
@@ -85,26 +86,34 @@
     {% endif %}
 </div>
 
+<script>
+    document.querySelectorAll('.estrellas').forEach(starContainer => {
+        const estrellas = starContainer.querySelectorAll('.estrella');
+        const estrellasActivas = parseInt(starContainer.getAttribute('data-estrellas'));
 
-  <script>
-      const precioUnitario = {{ producto['precio'] }};
-      const cantidadInput = document.getElementById('cantidad');
-      const totalDisplay = document.getElementById('total');
-  
-      function adjustQuantity(delta) {
-          let cantidad = parseInt(cantidadInput.value) || 1;
-          cantidad = Math.min(Math.max(cantidad + delta, 1), {{ producto['cantidad'] }});
-          cantidadInput.value = cantidad;
-          updateTotal();
-      }
-  
-      cantidadInput.addEventListener('input', updateTotal);
-  
-      function updateTotal() {
-          const cantidad = parseInt(cantidadInput.value) || 1;
-          totalDisplay.textContent = (precioUnitario * cantidad).toFixed(2);
-      }
-  </script>
+        // Marcar las estrellas según las valoraciones iniciales
+        for (let i = 0; i < estrellasActivas; i++) {
+            estrellas[i].classList.add('activada');
+        }
+
+        // Agregar evento de clic para marcar las estrellas
+        estrellas.forEach((estrella, index) => {
+            estrella.addEventListener('click', () => {
+                // Eliminar el color amarillo de todas las estrellas
+                estrellas.forEach(s => s.classList.remove('activada'));
+
+                // Marcar las estrellas hasta la que se hizo clic
+                for (let i = 0; i <= index; i++) {
+                    estrellas[i].classList.add('activada');
+                }
+
+                // Aquí podrías realizar alguna acción adicional como guardar el valor seleccionado, por ejemplo:
+                // console.log("Estrellas seleccionadas:", index + 1);
+            });
+        });
+    });
+</script>
+
   
 </body>
 </html>

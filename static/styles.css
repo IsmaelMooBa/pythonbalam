@@ -363,3 +363,25 @@ button {
     font-size: 16px;
     transition: background-color 0.3s ease;
 }
+ 
+.custom-navbar {
+    width: 100%;
+    gap: 15px; 
+}
+thead {
+    background-color: #636566;
+    color: white;
+}
+.estrellas {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.estrella {
+    font-size: 30px;
+    color: lightgray;
+}
+
+.estrella.activada {
+    color: yellow;
+}
