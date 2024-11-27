@@ -2,7 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, Response, url_for, session
 from flask_mysqldb import MySQL, MySQLdb
-from decimal import Decimal  # Importa Decimal para manejar las conversiones de precio
+from decimal import Decimal  
 
 app = Flask(__name__, template_folder='templates')
 
@@ -24,18 +24,17 @@ def allowed_file(filename):
 @app.route('/historial')
 def historial_ventas():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM reseñas")  # Obtiene todas las reseñas
-    reseñas = cur.fetchall()  # Recupera todas las filas
+    cur.execute("SELECT * FROM reseñas")  
+    reseñas = cur.fetchall()  
     cur.close()
 
-    # Organiza las reseñas por producto_id
     historial_reseñas = {}
     for reseña in reseñas:
-        producto_id = reseña['producto_id']  # Usa la clave 'producto_id' en lugar de un índice
+        producto_id = reseña['producto_id']  
         if producto_id not in historial_reseñas:
             historial_reseñas[producto_id] = []
         historial_reseñas[producto_id].append({
-            'nombre': reseña['nombre'],  # Accede por nombre de columna
+            'nombre': reseña['nombre'], 
             'opinion': reseña['opinion'],
             'estrellas': reseña['estrellas'],
             'fecha': reseña['fecha'],
@@ -43,16 +42,28 @@ def historial_ventas():
 
     return render_template("historial.html", historial_reseñas=historial_reseñas)
 
-@app.route('/agregar-administrador')
-def agregar_administrador():
+@app.route('/agregar-administrador', methods=['GET', 'POST'])
+def editar_roles():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM productos")
-    productos = cur.fetchall()
+
+    if request.method == 'POST':
+        usuario_id = request.form.get('usuario_id') 
+        nuevo_id_rol = request.form.get('id_rol')  
+        if usuario_id and nuevo_id_rol:
+
+            cur.execute("UPDATE usuarios SET id_rol = %s WHERE id = %s", (nuevo_id_rol, usuario_id))
+            mysql.connection.commit()
+        return redirect('/agregar-administrador')  
+
+    cur.execute("SELECT u.id, u.correo, u.id_rol FROM usuarios u")
+    usuarios = cur.fetchall()
+
+
+    cur.execute("SELECT id, nombre FROM roles WHERE id IN (1, 2)")
+    roles = cur.fetchall()
+
     cur.close()
-    
-    return render_template("agregarAdmin.html", productos=productos)
-
-
+    return render_template("agregarAdmin.html", usuarios=usuarios, roles=roles)
 
 @app.route('/listar-productos')
 def listar_productos():
@@ -76,7 +87,7 @@ def agregar_producto():
             imagen_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             imagen.save(imagen_path)
         else:
-            filename = None  # En caso de que no se haya subido una imagen válida
+            filename = None  
         
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO productos (nombre, precio, cantidad, imagen) VALUES (%s, %s, %s, %s)", (nombre, precio, cantidad, filename))
@@ -207,18 +218,15 @@ def listar():
 @app.route('/procesar_pago/<int:id>/<int:cantidad>', methods=["POST"])
 def procesar_pago(id, cantidad):
     metodo_pago = request.form['metodo_pago']
-    
-    # Obtener detalles del producto
+
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
     producto = cur.fetchone()
 
-    # Verificar si hay suficiente cantidad
     if cantidad > producto['cantidad']:
         cur.close()
         return render_template('producto_detalle.html', producto=producto, error="Cantidad no disponible.")
 
-    # Actualizar cantidad en inventario
     nueva_cantidad = producto['cantidad'] - cantidad
     cur.execute("UPDATE productos SET cantidad = %s WHERE id = %s", (nueva_cantidad, id))
     mysql.connection.commit()
@@ -227,7 +235,6 @@ def procesar_pago(id, cantidad):
     # Calcular el total
     precio_total = Decimal(producto['precio']) * cantidad
 
-    # Renderizar la página `pago_confirmado.html` con datos dinámicos
     return render_template('pago_confirmado.html', 
                            producto=producto, 
                            cantidad=cantidad, 
@@ -239,37 +246,30 @@ def procesar_pago(id, cantidad):
 def producto_detalle(id):
     cur = mysql.connection.cursor()
     
-    # Obtener detalles del producto
     cur.execute("SELECT * FROM productos WHERE id = %s", (id,))
     producto = cur.fetchone()
     
-    # Obtener las reseñas del producto
+
     cur.execute("SELECT opinion, estrellas, fecha, nombre FROM reseñas WHERE producto_id = %s", (id,))
     reseñas = cur.fetchall()
     
     if request.method == 'POST':
-        cantidad = int(request.form['cantidad'])  # Cantidad seleccionada por el usuario
+        cantidad = int(request.form['cantidad'])  
         metodo_pago = request.form['metodo_pago']
         
-        # Verificar si hay suficiente cantidad disponible
+ 
         if cantidad > producto['cantidad']:
             return render_template('producto_detalle.html', producto=producto, reseñas=reseñas, error="Cantidad no disponible.")
 
-        # Calcular el precio total
         precio_total = Decimal(producto['precio']) * cantidad
 
-        # Actualizar la base de datos: restar la cantidad comprada
+
         nueva_cantidad = producto['cantidad'] - cantidad
         cur.execute("UPDATE productos SET cantidad = %s WHERE id = %s", (nueva_cantidad, id))
         mysql.connection.commit()
 
-        # Opcional: Guardar registro de la compra (si tienes una tabla de compras)
-        # cur.execute("INSERT INTO compras (producto_id, cantidad, total, metodo_pago) VALUES (%s, %s, %s, %s)", (id, cantidad, precio_total, metodo_pago))
-        # mysql.connection.commit()
-
         cur.close()
 
-        # Redirigir o mostrar confirmación de compra
         return render_template('compra_confirmada.html', producto=producto, cantidad=cantidad, total=precio_total, metodo_pago=metodo_pago)
 
     cur.close()
@@ -279,7 +279,6 @@ def producto_detalle(id):
 @app.route('/pago_confirmado', methods=["GET", "POST"])
 def pago_confirmado():
     if request.method == "POST":
-        # Guardar reseña en la base de datos
         opinion = request.form['opinion']
         estrellas = request.form['estrellas']
 
@@ -295,7 +294,7 @@ def guardar_reseña():
     producto_id = request.form['producto_id']
     opinion = request.form['opinion']
     estrellas = request.form['estrellas']
-    nombre = request.form['nombre']  # Capturar el nombre del usuario
+    nombre = request.form['nombre'] 
 
     cur = mysql.connection.cursor()
     cur.execute("INSERT INTO reseñas (producto_id, opinion, estrellas, nombre) VALUES (%s, %s, %s, %s)", 
